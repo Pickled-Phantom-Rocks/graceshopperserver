@@ -16,6 +16,9 @@ apiRouter.use('/products', productsRouter)
 const { cartsRouter } = require('./carts')
 apiRouter.use('/carts', cartsRouter)
 
+const { cartProductsRouter } = require('./cart_products')
+apiRouter.use('/cart-products', cartProductsRouter)
+
 const categoryProductsRouter = require('./category_products');
 apiRouter.use('/category_products', categoryProductsRouter);
 

@@ -48,6 +48,20 @@ async function getUser({email, password,}) {
     }
 }
 
+async function getUserByUsername(username) {
+    try {
+        const { rows: [user] } = await client.query(`
+            SELECT *
+            FROM users
+            WHERE name = $1
+        `, [username])  
+
+        return user
+    } catch (error) {
+        throw error
+    }
+}
+
 async function getUserById(userId) {
     try {
         const { rows: [user] } = await client.query(`
@@ -59,7 +73,7 @@ async function getUserById(userId) {
         if (!user) {
             return null
         }
-
+        
         return user;
     } catch (error) {
         throw error;
@@ -114,9 +128,9 @@ async function updateUserInfo (id, fields) {
       return;
     }
     try {
-      const { rows: [ user ]} = await client.query(`
+      const {rows: [ user ]} = await client.query(`
         UPDATE users
-        SET ${ setString }
+        SET ${setString}
         WHERE id=${id}
         RETURNING *;
       `, Object.values(fields));
@@ -145,6 +159,20 @@ async function updateUserInfo (id, fields) {
     }
   };
 
+  async function updateAdmin (id, isAdmin) {
+      try {
+        const { rows: [user]} = await client.query(`
+            UPDATE users
+            SET "isAdmin" = $2
+            WHERE id=$1
+            RETURNING *;
+        `, [id, isAdmin]);
+      return user;
+      } catch(error) {
+          throw error;
+      }
+  }
+
 module.exports = {
     createUser,
     getUser,
@@ -153,5 +181,7 @@ module.exports = {
     getAllUsers,
     deleteUser,
     updateUserInfo,
-    updatePassword
+    updatePassword,
+    updateAdmin,
+    getUserByUsername
 }

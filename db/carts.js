@@ -1,3 +1,4 @@
+const { attachProductsToCarts } = require('./products')
 const client = require('./client')
 const utils = require('./utils')
 
@@ -17,6 +18,25 @@ async function createCarts({userId, age, isActive}) {
 
     }
 
+}
+
+async function getAllCarts() {
+    try {
+        const { rows: carts } = await client.query(`
+            SELECT carts.*, users.name AS "cartOwner"
+            FROM carts
+            JOIN users
+            ON carts."userId"=users.id;
+        `)
+        //console.log("Is this working?")
+        //console.log("The carts: ", carts)
+        const cartsWithProducts = await attachProductsToCarts(carts)
+        //console.log("Carts with products", cartsWithProducts)
+
+        return cartsWithProducts
+    } catch (error) {
+        throw error
+    }
 }
 
 async function getAllActiveCarts() {
@@ -44,12 +64,14 @@ async function getCartById({id}) {
             WHERE id=$1
         `, [id])
 
+        return cart
+
     } catch (error) {
         throw error
     }
 }
 
-async function getCartByUserId({userId}) {
+async function getCartByUserId(userId) {
     try {
 
         const { rows: cart } = await client.query(`
@@ -58,9 +80,12 @@ async function getCartByUserId({userId}) {
             WHERE "userId"=$1;
         `, [userId])
 
-        return cart
+        const cartsWithProducts = await attachProductsToCarts(cart)
+
+        return cartsWithProducts
 
     } catch (error) {
+        console.log("Error with GetCartByUserId")
         throw error
     }
 }
@@ -115,5 +140,6 @@ module.exports = {
     getCartByUserId,
     destroyCart,
     updateCart,
-    getCartById
+    getCartById,
+    getAllCarts
 }

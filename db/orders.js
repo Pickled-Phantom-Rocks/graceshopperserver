@@ -20,7 +20,7 @@ async function createOrder({
     }
 }
 
-async function getOrdersByUserId({ userId }) {
+async function getOrdersByUserId( userId ) {
     if(!userId){
         return;
     }
@@ -79,9 +79,36 @@ async function updateOrder({ id, ...fields }) {
     }
 }
 
+async function deleteOrder (orderId) {
+    try {
+        const { rows: [orderToDelete]} = await client.query(`
+            DELETE FROM orders
+            WHERE id=$1
+            RETURNING *;
+        `, [orderId])
+        return orderToDelete;
+    } catch (e) {
+        throw e;
+    }
+}
+
+async function getAllOrders () {
+    try {
+        const { rows } = await client.query(`
+            SELECT *
+            FROM orders;
+        `);
+        return rows;
+    } catch (e) {
+        throw e;
+    }
+}
+
 module.exports = {
     createOrder,
     getOrdersByUserId,
     getOrderById,
-    updateOrder
+    updateOrder,
+    deleteOrder,
+    getAllOrders
 }

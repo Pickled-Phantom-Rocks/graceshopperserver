@@ -20,6 +20,34 @@ async function createProducts({name, description, quantityAvailable, price, phot
 
 }
 
+async function attachProductsToCarts(carts) {
+    const cartsToReturn = [...carts]
+    const binds = carts.map((_, index) => `$${index + 1}`).join(', ')
+    const cartIds = carts.map(cart => cart.id)
+    if(!cartIds?.length) return
+
+    try{
+
+        const { rows: products } = await client.query(`
+            SELECT products.*, cart_products."cartId", cart_products."productPrice", cart_products."quantityOfItem", cart_products.id AS "cartProductsId"
+            FROM products
+            JOIN cart_products
+            ON cart_products."productId" = products.id
+            WHERE cart_products."cartId" IN (${ binds });
+        `, cartIds)
+
+        for (const cart of cartsToReturn) {
+            const productsToAdd = products.filter(product => product.cartId === cart.id)
+            cart.products = productsToAdd
+        }
+
+        return cartsToReturn
+
+    } catch(error) {
+        throw error
+    }
+}
+
 async function getAllProducts() {
     try {
         const { rows: products } = await client.query(`
@@ -51,6 +79,17 @@ async function getProductById(productId) {
 
 }
 
+async function getProductByName(name){
+    try {
+        const {rows: product} = await client.query(`
+            SELECT *
+            FROM products
+            WHERE name=$1;
+        `, [name]);
+    } catch(error) {
+        throw error
+    }
+}
 async function getProductByCategory(category) {
 
     try {
@@ -61,35 +100,27 @@ async function getProductByCategory(category) {
 
 }
 
-async function updateProduct({ id, ...fields}) {
-
+async function updateProduct(id, fields) {
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+    ).join(', ');
+    
+    if (setString.length === 0) {
+        return;
+    }
     try {
-
-        const toUpdate = {}
-
-        for (let column in fields) {
-            if (fields[column] !== undefined) toUpdate[column] = fields[column]
-        }
-
-        let product
-
-        if (utils.dbFields(fields).insert.length > 0) {
-            const { rows } = await client.query(`
-                UPDATE products
-                SET ${utils.dbFields(toUpdate).insert}
-                WHERE id=${id}
-                RETURNING *;
-            `, Object.values(toUpdate))
-            product = rows[0]
-
-            console.log("UpdatedProduct: ", product)
-            return product
-        }
-
+        const {rows: [product]} = await client.query(`
+            UPDATE products
+            SET ${setString}
+            WHERE id=${id}
+            RETURNING *;
+        `, Object.values(fields))
+        console.log('from db:', product);
+        return product
     } catch (error) {
+        console.log(error);
         throw error
     }
-
 }
 
 async function deleteProductById({productId}) {
@@ -118,7 +149,9 @@ async function deleteProductById({productId}) {
 module.exports = {
     createProducts,
     getAllProducts,
+    getProductByName,
     getProductById,
     updateProduct,
-    deleteProductById
+    deleteProductById,
+    attachProductsToCarts
 }

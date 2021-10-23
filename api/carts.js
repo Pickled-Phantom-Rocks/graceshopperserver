@@ -1,6 +1,6 @@
 const express = require('express')
 const cartsRouter = express.Router()
-const { createCarts, getAllActiveCarts, getCartByUserId, updateCart, destroyCart } = require('../db')
+const { createCarts, getAllCarts, getCartByUserId, updateCart, destroyCart } = require('../db')
 
 cartsRouter.use((req, res, next) => {
     try {
@@ -15,7 +15,7 @@ cartsRouter.use((req, res, next) => {
 cartsRouter.get('/', async (req, res, next) => {
     try { //gets all open/active carts, only accessible to admin for order fulfillment 
 
-        const activeCarts = await getAllActiveCarts()
+        const activeCarts = await getAllCarts()
 
         res.send(activeCarts)
 
@@ -27,7 +27,7 @@ cartsRouter.get('/', async (req, res, next) => {
 cartsRouter.get('/:userId', async (req, res, next) => {
     try{ //gets a cart using userId
 
-        const userId = req.params
+        const {userId} = req.params
 
         const cart = await getCartByUserId(userId)
 

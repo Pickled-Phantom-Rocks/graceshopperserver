@@ -11,7 +11,9 @@ const {
 	getAllUsers,
     deleteUser,
     updateUserInfo,
-    updatePassword
+    updatePassword,
+	updateAdmin,
+	getUserByUsername
 } = require('../db/users');
 const { user } = require('pg/lib/defaults');
 
@@ -30,6 +32,34 @@ usersRouter.get('/', async (req, res, next) => {
     }
 })
 
+// usersRouter.get('/:username', async (req, res, next) => {
+
+// 	const {username} = req.params
+	
+// 	try {
+// 		const user = await getUserByUsername(username)
+
+// 		res.send(username)
+// 	} catch (error) {
+// 		throw error
+// 	}
+// })
+
+// usersRouter.get('/:userId', async (req, res, next) => {
+
+// 	const {userId} = req.params
+
+// 	try {
+
+// 		const user = await getUserById(userId)
+		
+// 		res.send(user)
+// 	} catch (error) {
+// 		throw error
+// 	}
+
+// })
+
 usersRouter.post('/register', async (req, res, next) => {
 	const {email, password} = req.body;
 	try {
@@ -45,7 +75,7 @@ usersRouter.post('/register', async (req, res, next) => {
 		};
 
 		const existingEmail = await getUserByEmail(email);
-		if(typeof(existingUser) == 'object') {
+		if(typeof(existingEmail) == 'object') {
 			return res.status(400).send({
 				message: "This email address is already associated with another account."
 			})
@@ -63,7 +93,8 @@ usersRouter.post('/register', async (req, res, next) => {
 		const finalReturn = {
 			message: "Thank you for registering.",
 			token: token,
-			user: token.name
+			user: token.name,
+			id: token.id
 		};
 		res.send(JSON.stringify(finalReturn));
 	} catch(error) {
@@ -96,8 +127,9 @@ usersRouter.post('/login', async (req, res, next) => {
 				status: 204,
 				message: "You have successfully logged in.",
 				name: user.name,
-				token: token
-				
+				token: token,
+				id: user.id,
+				isAdmin: user.isAdmin
 			})
 		} else {
 			res.send({
@@ -162,6 +194,7 @@ usersRouter.patch('/:userId/billing', async (req, res, next) => {
 	}
 })
 
+
 usersRouter.patch('/:userId/password', async (req, res, next) => {
 	try {
 		const {userId} = req.params;
@@ -185,6 +218,17 @@ usersRouter.patch('/:userId/password', async (req, res, next) => {
 				message: "Incorrect current password."
 			})
 		}
+	} catch(error) {
+		next(error);
+	}
+});
+
+usersRouter.patch('/:userId/admin', async (req, res, next) => {
+	try {
+		const {userId} = req.params;
+		const {isAdmin} = req.body;
+		const updated = await updateAdmin(userId, isAdmin)
+		res.send(updated)
 	} catch(error) {
 		next(error);
 	}
