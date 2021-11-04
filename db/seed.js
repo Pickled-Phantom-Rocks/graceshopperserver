@@ -416,12 +416,12 @@ async function rebuildDB() {
         await createTables();
         await createInitialUsers();
         await createInitialProducts();
+        await createInitialCategories();
+        await createInitialCategoryProducts();
         await createInitialCarts();
         await createInitialCartProducts();
         await createInitialOrders();
         await createInitialOrderProducts();
-        await createInitialCategories();
-        await createInitialCategoryProducts();
         console.log("RebuildDB function was successfull!")
     } catch (error) {
         console.log('Error during rebuildDB');
