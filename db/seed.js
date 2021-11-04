@@ -365,7 +365,7 @@ async function createInitialCategories() {
 async function createInitialCategoryProducts() {
     try {
         console.log("Starting to create initial product_categories")
-        const [Rock, Almogordo, Alluring, Beta, Bread, Butter, Cabocon, Candied, Chatoyant, Cinnamon, Cornichon, Dill, Genuine, German, Gherkin, Geode, Half, Hungarian, Jade, Kimchi, Kool, Kosher, Lime, Greg, Overnight, Polish, Sweet, Ghost] = await getAllProducts()
+        const [Rock, Almogordo, Alluring, Beta, Bread, Butter, Cabocon, Candied, Chatoyant, Cinnamon, Cornichon, Dill, Genuine, German, Gherkin, Geode, Half, Hungarian, Jade, Kimchi, Kool, Kosher, Lime, Greg, Overnight, Polish, Sweeet, Ghost] = await getAllProducts()
         const [Anxious, Boring, Creepy, Gentle, Inspiring, Tired, Pendantic, Rambuncious, Silly, Sour, Spicy, Sweet] = await getAllCategories()
 
         const productCategoriesToCreate = [
@@ -395,7 +395,7 @@ async function createInitialCategoryProducts() {
             { productId: Greg.id, categoryId: Creepy.id},
             { productId: Overnight.id, categoryId: Tired.id},
             { productId: Polish.id, categoryId: Boring.id},
-            { productId: Sweet.id, categoryId: Sweet.id},
+            { productId: Sweeet.id, categoryId: Sweet.id},
             { productId: Ghost.id, categoryId: Creepy.id},
         ]
 
