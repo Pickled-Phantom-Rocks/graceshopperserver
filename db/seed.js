@@ -379,7 +379,7 @@ async function createInitialCategoryProducts() {
             { productId: Cabocon.id, categoryId: Anxious.id},
             { productId: Candied.id, categoryId: Anxious.id},
             { productId: Chatoyant.id, categoryId: Rambuncious.id},
-            { productId: Cinnamon.id, categoryId: sweet.id},
+            { productId: Cinnamon.id, categoryId: Sweet.id},
             { productId: Cornichon.id, categoryId: Anxious.id},
             { productId: Dill.id, categoryId: Sour.id},
             { productId: Genuine.id, categoryId: Sour.id},
