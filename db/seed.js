@@ -64,6 +64,17 @@ async function createTables() {
         "photoName" VARCHAR(255)
     );
 
+    CREATE TABLE categories(
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) UNIQUE NOT NULL
+    );
+
+    CREATE TABLE category_products(
+        id SERIAL PRIMARY KEY,
+        "productId" INTEGER REFERENCES products(id),
+        "categoryId" INTEGER REFERENCES categories(id)
+    );
+    
     CREATE TABLE carts(
         id SERIAL PRIMARY KEY,
         "userId" INTEGER REFERENCES users(id),
@@ -97,17 +108,6 @@ async function createTables() {
         name VARCHAR(255) UNIQUE NOT NULL,
         description VARCHAR (255),
         "photoName" VARCHAR(255)
-    );
-
-    CREATE TABLE categories(
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) UNIQUE NOT NULL
-    );
-
-    CREATE TABLE category_products(
-        id SERIAL PRIMARY KEY,
-        "productId" INTEGER REFERENCES products(id),
-        "categoryId" INTEGER REFERENCES categories(id)
     );
     `);
     
