@@ -55,7 +55,6 @@ async function getUserByUsername(username) {
             FROM users
             WHERE name = $1
         `, [username])  
-
         return user
     } catch (error) {
         throw error
@@ -69,11 +68,6 @@ async function getUserById(userId) {
             FROM users
             WHERE id = ${userId};
       `);
-
-        if (!user) {
-            return null
-        }
-        
         return user;
     } catch (error) {
         throw error;
@@ -159,15 +153,15 @@ async function updateUserInfo (id, fields) {
     }
   };
 
-  async function updateAdmin (id, isAdmin) {
+  async function updateAdmin (id, admin) {
       try {
         const { rows: [user]} = await client.query(`
             UPDATE users
-            SET "isAdmin" = $2
-            WHERE id=$1
+            SET "isAdmin" = $1
+            WHERE id=${id}
             RETURNING *;
-        `, [id, isAdmin]);
-      return user;
+        `, [admin]);
+      return admin;
       } catch(error) {
           throw error;
       }

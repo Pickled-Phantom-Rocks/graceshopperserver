@@ -1,12 +1,12 @@
 const client = require('./client');
 
-async function createOrder_Product({ orderId, productId, cartProductsId, quantityOrdered, priceWhenOrdered }) {
+async function createOrder_Product({ orderId, productId, quantityOrdered, priceWhenOrdered, name, description, photoName }) {
     try {
 		const { rows: [order_product]} = await client.query(`
-			INSERT INTO order_products("orderId", "productId", "cartProductsId", "quantityOrdered", "priceWhenOrdered")
-			VALUES($1, $2, $3, $4, $5)
+			INSERT INTO order_products("orderId", "productId", "quantityOrdered", "priceWhenOrdered", name, description, "photoName")
+			VALUES($1, $2, $3, $4, $5, $6, $7)
 			RETURNING *;
-		`, [orderId, productId, cartProductsId, quantityOrdered, priceWhenOrdered]);
+		`, [orderId, productId, quantityOrdered, priceWhenOrdered, name, description, photoName]);
         console.log("CreateOrderProduct:", order_product);
 		return order_product;
     } catch (error) {
@@ -21,7 +21,7 @@ async function getOrder_ProductById(id) {
 			FROM order_products
 			WHERE id=$1;
 		`, [id]);
-        console.log("GETORDER_PRODUCTBYID!!!:", order_product);
+        console.log("GET ORDER_PRODUCT BY ID:", order_product);
 		return order_product;
 	} catch(error) {
 		throw error;
@@ -35,7 +35,7 @@ async function getOrder_ProductsByOrderId(orderId) {
 			FROM order_products
 			WHERE "orderId"=$1;
 		`, [orderId]);
-        console.log("getOrder_ProductSBy Order Id!!!:!!!:!", order_product);
+        console.log("getOrder_ProductSBy Order Id:", order_product);
 		return order_product;
 	} catch(error) {
 		throw error;
@@ -73,11 +73,24 @@ async function deleteOrder_Product (id) {
 			WHERE id=$1
 			RETURNING *;
 		`, [id]);
-        console.log("DELETE!!! Order_Product DB", order_product);
+        console.log("DELETE: Order_Product DB", order_product);
 		return order_product;
 	} catch(error) {
 		throw error;
 	}
+}
+
+async function getAllCartProducts () {
+    try {
+        const { rows: cartProducts} = await client.query(`
+            SELECT *
+            FROM cart_products;
+        `)
+        console.log(cartProducts);
+        return cartProducts;
+    } catch (err) {
+        throw err;
+    }
 }
 
 module.exports = {
@@ -85,5 +98,6 @@ module.exports = {
     getOrder_ProductById,
     getOrder_ProductsByOrderId,
     updateOrder_Product,
-    deleteOrder_Product
+    deleteOrder_Product,
+    getAllCartProducts
 };

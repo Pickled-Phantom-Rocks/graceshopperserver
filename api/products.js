@@ -1,6 +1,6 @@
 const express = require('express')
 const productsRouter = express.Router()
-const { createProducts, getAllProducts, getProductByName, getProductById, updateProduct, deleteProductById } = require('../db')
+const { createProducts, getAllProducts, getProductByName, getProductById, updateProduct, deleteProduct } = require('../db')
 
 productsRouter.use((req, res, next) => {
     try {
@@ -13,34 +13,19 @@ productsRouter.use((req, res, next) => {
 })
 
 productsRouter.get('/', async (req, res, next) => {
-    try {//get all the products
-
+    try {
         const products = await getAllProducts();
-
         res.send(products);
-
     } catch (error) {
         throw error
     }
 })
 
 productsRouter.get('/:productId', async (req, res, next) => {
-    try {//get product by Id
-
-        const {productId} = req.params
-
-        const product = await getProductById(productId)
-
-        res.send(product)
-
-    } catch (error) {
-        throw error
-    }
-})
-
-productsRouter.get('/:category', async (req, res, next) => {
     try {
-
+        const {productId} = req.params;
+        const product = await getProductById(productId)
+        res.send(product)
     } catch (error) {
         throw error
     }
@@ -70,8 +55,9 @@ productsRouter.patch('/:productId', async (req, res, next) => {;
     try {
         const { productId } = req.params;
         const { fields } = req.body;
-        const existingProduct = await getProductByName(fields.name);
-        if(typeof(existingProduct) == 'object') {
+        const {name, desc, quantityAvailable, price, photoName} = fields;
+        const existingProduct = await getProductByName(name);
+        if(typeof(existingProduct) === 'object') {
             return res.status(400).send({
                 message: "A product with this name already exists."
             })
@@ -102,23 +88,22 @@ productsRouter.patch('/:productId', async (req, res, next) => {;
         } else {
             res.send({
                 name: "Duplication Error",
-                message: "A product by this name already exists."
+                message: "A product with this name already exists."
             })
         }
-        
     } catch (error) {
         throw error
     }
 })
 
 productsRouter.delete('/:productId', async (req, res, next) => {
-    try {//Delete the product matching the productId
-
+    try {
         const productId = req.params
-
-        const deletedProduct = await deleteProductById(productId)
-        res.send(deletedProduct)
-
+        await deleteProduct(productId);
+        res.send({
+            status:204,
+            message: "Product successfully deleted."
+        })
     } catch (error) {
         throw error
     }

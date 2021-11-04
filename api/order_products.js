@@ -41,28 +41,37 @@ orderProductsRouter.get('/:orderId', async (req, res, next) => {
 
 orderProductsRouter.patch('/:order_productId', async (req, res, next) => {
     const {order_productId} = req.params;
-    const {orderId, productId, cartProductsId, quantityOrdered, priceWhenOrdered} = req.body;
+    const {orderId, productId, quantityOrdered, priceWhenOrdered, name, description, price, photoName } = req.body;
 
     const order_ProductToUpdate = {};
-    orderToUpdate.id = order_productId;
+    order_ProductToUpdate.id = order_productId;
     if (orderId) {
-        orderToUpdate.orderId = orderId;
+        order_ProductToUpdate.orderId = orderId;
     }
     if (productId) {
-        orderToUpdate.productId = productId;
-    }
-    if (cartProductsId) {
-        orderToUpdate.cartProductsId = cartProductsId;
+        order_ProductToUpdate.productId = productId;
     }
     if (quantityOrdered) {
-        orderToUpdate.quantityOrdered = quantityOrdered;
+        order_ProductToUpdate.quantityOrdered = quantityOrdered;
     }
     if (priceWhenOrdered) {
-        orderToUpdate.priceWhenOrdered = priceWhenOrdered;
+        order_ProductToUpdate.priceWhenOrdered = priceWhenOrdered;
+    }
+    if (name) {
+        order_ProductToUpdate.name = name;
+    }
+    if (description) {
+        order_ProductToUpdate.description = description;
+    }
+    if (price) {
+        order_ProductToUpdate.price = price;
+    }
+    if (photoName) {
+        order_ProductToUpdate.photoName = photoName;
     }
     try {
-       const updatedOrder = await updateOrder_Product(orderToUpdate); 
-       res.send(updatedOrder);
+       const updatedOrder_Product = await updateOrder_Product(order_ProductToUpdate); 
+       res.send(updatedOrder_Product);
     } catch (error) {
         next(error);
     }

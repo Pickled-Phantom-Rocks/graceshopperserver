@@ -27,7 +27,7 @@ apiRouter.use('/orders', ordersRouter);
 
 
 apiRouter.use((error, req, res, next) => {
-    res.send("Hello!");
+    res.send(error);
 });
 
 apiRouter.use(function (err, req, res, next) {

@@ -1,7 +1,7 @@
 const express = require('express')
 const cartProductsRouter = express.Router()
 
-const { deleteCart_Product, updateCart_Product } = require('../db');
+const { deleteCart_Product, updateCart_Product, addProductToCart, getCart_ProductByCartId } = require('../db');
 
 
 cartProductsRouter.use((req, res, next) => {
@@ -12,6 +12,40 @@ cartProductsRouter.use((req, res, next) => {
     } catch (error) {
         throw error
     }
+})
+
+cartProductsRouter.get("/:cartId", async (req, res, next) => {
+
+    const {cartId} = req.params
+
+    try {
+
+        const cartProduct = await getCart_ProductByCartId(cartId)
+
+        res.send(cartProduct)
+
+    } catch (error) {
+        throw error
+    }
+
+})
+
+cartProductsRouter.post('/:cartId', async (req, res, next) => {
+    //adds product to cart matching cartId
+
+    const { cartId } = req.params
+    const { productId, productPrice, quantityOfItem } = req.body
+    
+    const productsToAdd = { cartId, productId, productPrice, quantityOfItem }    
+
+    try {
+        const addedProducts = await addProductToCart(productsToAdd)
+
+        res.send(addedProducts)
+    } catch (error) {
+        throw error
+    }
+    
 })
 
 cartProductsRouter.patch('/:cart_productId', async (req, res, next) => {
@@ -45,13 +79,13 @@ cartProductsRouter.patch('/:cart_productId', async (req, res, next) => {
     }
 })
 
-cartProductsRouter.delete('/:cart_productId', async (req, res, next) => {
+cartProductsRouter.delete('/:productId', async (req, res, next) => {
 
-    const {cart_productId} = req.params
+    const {productId} = req.params
 
     try {//delete a cart_product
-        const cartToDelete = await deleteCart_Product(cart_productId);
-        res.send(cartToDelete);
+        const removedProduct = await deleteCart_Product(productId);
+        res.send(removedProduct);
 
     } catch (error) {
         throw error
