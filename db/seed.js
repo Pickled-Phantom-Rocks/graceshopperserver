@@ -365,11 +365,11 @@ async function createInitialCategories() {
 
 async function createInitialCategoryProducts() {
     try {
-        console.log("Starting to create initial product_categories")
+        console.log("Starting to create initial category_products")
         const [Rock, Almogordo, Alluring, Beta, Bread, Butter, Cabocon, Candied, Chatoyant, Cinnamon, Cornichon, Dill, Genuine, German, Gherkin, Geode, Half, Hungarian, Jade, Kimchi, Kool, Kosher, Lime, Greg, Overnight, Polish, Sweeet, Ghost] = await getAllProducts()
         const [Anxious, Boring, Creepy, Gentle, Inspiring, Tired, Pendantic, Rambuncious, Silly, Sour, Spicy, Sweet] = await getAllCategories()
 
-        const productCategoriesToCreate = [
+        const categoryProductsToCreate = [
             { productId: Rock.id, categoryId: Silly.id },
             { productId: Almogordo.id, categoryId: Spicy.id },
             { productId: Alluring.id, categoryId: Silly.id },
@@ -400,12 +400,12 @@ async function createInitialCategoryProducts() {
             { productId: Ghost.id, categoryId: Creepy.id},
         ]
 
-        const productCategories = await Promise.all(productCategoriesToCreate.map(addProductToCategory))
-        console.log("Added products to categories: ", productCategories)
+        const categoryProducts = await Promise.all(categoryProductsToCreate.map(addProductToCategory))
+        console.log("Added products to categories: ", categoryProducts)
 
-        console.log("Finished creating product_categories!")
+        console.log("Finished creating category_products!")
     } catch (error) {
-        console.log("Error while creating initial product_categories")
+        console.log("Error while creating initial category_products")
         throw error
     }
 }
