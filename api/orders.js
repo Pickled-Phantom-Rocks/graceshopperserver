@@ -29,8 +29,8 @@ ordersRouter.get('/', async ( req, res, next) => {
         const allOrders = await getAllOrders();
         console.log(allOrders)
         res.send(allOrders);
-    } catch (e) {
-        next(e);
+    } catch (error) {
+        next(error);
     }
 })
 
