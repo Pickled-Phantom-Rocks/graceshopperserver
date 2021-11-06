@@ -125,6 +125,17 @@ usersRouter.get('/profile', async (req, res, next) => {
 	}
 });
 
+usersRouter.get('/:userId', async (req, res, next) => {
+	try {
+		const {userId} = req.params
+		const userData = await getUserById(userId)
+		res.send(userData)
+	} catch (error) {
+		next(error)
+	}
+})
+
+
 usersRouter.patch('/:userId/info', async (req, res, next) => {
 	try {
 		const {userId} = req.params;
