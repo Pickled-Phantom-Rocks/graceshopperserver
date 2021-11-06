@@ -14,7 +14,9 @@ const {
     getAllOrdersByUserId,
     getProductById,
     updateOrderStatus,
-    getOrdersByStatus
+    getOrdersByStatus,
+    getUserById,
+    getAllOrdersWithUsers
 } = require('../db');
 
 ordersRouter.use((req, res, next) => {
@@ -44,6 +46,18 @@ ordersRouter.get('/:userId/pastorders', async (req, res, next) => {
  }
 });
 
+ordersRouter.get('/users', async (req, res, next) => {
+
+    try {
+       const ordersWithUsers = await getAllOrdersWithUsers(); 
+       console.log(ordersWithUsers);
+       res.send(ordersWithUsers);
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+   });
+
 ordersRouter.get('/:orderId', async (req, res, next) => {
     const {orderId} = req.params;
     try {
@@ -59,7 +73,7 @@ ordersRouter.post('/:orderId/products', async (req, res, next) => {
     const { orderId } = req.params;
     const { quantityOrdered, priceWhenOrdered, productId } = req.body;
 
-    try {//adds product to the order
+    try {
         if ( !quantityOrdered || !priceWhenOrdered || !productId) {
             res.send({
                 name: "Information Required",
