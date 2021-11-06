@@ -73,7 +73,7 @@ async function getCategoryProductsByProduct(productId) {
 			JOIN products ON category_products."productId" = products.id
 			WHERE "productId"=$1;
 		`, [productId]);
-		return categoryProducts;
+		return categoryProducts
 	} catch(error) {
 		throw error;
 	}
