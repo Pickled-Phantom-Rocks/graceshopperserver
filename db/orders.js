@@ -166,7 +166,7 @@ async function getAllOrdersWithUsers() {
             delete order.owner.password;
             delete order.owner.billingInfo;    
         }
-        
+        console.log(orders);
         return orders;
     } catch (error) {
         throw error;
