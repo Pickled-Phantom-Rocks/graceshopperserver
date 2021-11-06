@@ -15,7 +15,7 @@ async function createCarts({userId, age, isActive}) {
         return carts
 
     } catch (error) {
-
+        throw error;
     }
 
 }
