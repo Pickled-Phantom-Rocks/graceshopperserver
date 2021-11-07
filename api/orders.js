@@ -100,9 +100,9 @@ ordersRouter.post('/:orderId/products', async (req, res, next) => {
 })
 
 ordersRouter.post('/:userId', async (req, res, next) => {
-    const { orderDate, deliveryDate, totalPrice } = req.body;
+    const { orderDate, totalPrice, orderStatus } = req.body;
     const { userId } = req.params;
-    const order = { userId, orderDate, deliveryDate, totalPrice}; 
+    const order = { userId, orderDate, totalPrice, orderStatus}; 
     try {
        const newOrder = await createOrder(order); 
        res.send(newOrder);
