@@ -1,7 +1,10 @@
 const express = require('express');
-const { deleteOrder } = require('../db');
 const orderProductsRouter = express.Router();
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const { JWT_SECRET } = process.env;
 
+const { deleteOrder } = require('../db');
 const {    
     createOrder_Product,
     getAllOrderProducts,
@@ -104,6 +107,4 @@ orderProductsRouter.delete('/:orderProductsId', async (req, res, next) => {
     }
 })
 
-module.exports = {
-    orderProductsRouter
-}
+module.exports = orderProductsRouter;
