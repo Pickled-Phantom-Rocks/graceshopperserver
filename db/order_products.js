@@ -14,6 +14,18 @@ async function createOrder_Product({ orderId, productId, quantityOrdered, priceW
     }
 }
 
+async function getAllOrderProducts() {
+    try {
+        const { rows: orderProducts} = await client.query(`
+			SELECT *
+			FROM order_products;
+		`);
+		return orderProducts;
+    }catch(error){
+        throw error;
+    }
+}
+
 async function getOrder_ProductById(id) {
 	try {
 		const { rows: [order_product]} = await client.query(`
@@ -95,6 +107,7 @@ async function getAllCartProducts () {
 
 module.exports = {
     createOrder_Product,
+    getAllOrderProducts,
     getOrder_ProductById,
     getOrder_ProductsByOrderId,
     updateOrder_Product,

@@ -4,6 +4,7 @@ const orderProductsRouter = express.Router();
 
 const {    
     createOrder_Product,
+    getAllOrderProducts,
     getOrder_ProductById,
     getOrder_ProductsByOrderId,
     updateOrder_Product,
@@ -17,6 +18,15 @@ orderProductsRouter.use((req, res, next) => {
     } catch (error) {
         throw error
     }
+})
+
+orderProductsRouter.get('/', async (req, res, next) => {
+	try {
+		const categoryProducts = await getAllOrderProducts();
+		res.send(categoryProducts);
+	} catch(error) {
+		next(error);
+	}
 })
 
 orderProductsRouter.get('/:order_productId', async (req, res, next) => {
@@ -39,9 +49,7 @@ orderProductsRouter.get('/:orderId', async (req, res, next) => {
     }
 })
 
-orderProductsRouter.post('/:orderId/products', async (req, res, next) => {
-    const {orderId} = req.params;
-    const {orderId, productId, quantityOrdered, priceWhenOrdered, name, description, photoName} = req.body;
+orderProductsRouter.post('/:orderId', async (req, res, next) => {
     const result = await createOrder_Product(req.body);
     res.send(result);
 })
