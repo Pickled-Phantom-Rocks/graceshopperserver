@@ -24,6 +24,7 @@ async function dropTables() {
     DROP TABLE IF EXISTS cart_products;
     DROP TABLE IF EXISTS carts;
     DROP TABLE IF EXISTS category_products;
+    DROP TABLE IF EXISTS product_categories;
     DROP TABLE IF EXISTS categories;
     DROP TABLE IF EXISTS products;
     DROP TABLE IF EXISTS users;
@@ -64,6 +65,17 @@ async function createTables() {
         "photoName" VARCHAR(255)
     );
 
+    CREATE TABLE categories(
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) UNIQUE NOT NULL
+    );
+
+    CREATE TABLE category_products(
+        id SERIAL PRIMARY KEY,
+        "productId" INTEGER REFERENCES products(id),
+        "categoryId" INTEGER REFERENCES categories(id)
+    );
+
     CREATE TABLE carts(
         id SERIAL PRIMARY KEY,
         "userId" INTEGER REFERENCES users(id),
@@ -94,20 +106,9 @@ async function createTables() {
         "productId" INTEGER,
         "quantityOrdered" INTEGER,
         "priceWhenOrdered" DECIMAL,
-        name VARCHAR(255) UNIQUE NOT NULL,
+        name VARCHAR(255) NOT NULL,
         description VARCHAR (255),
         "photoName" VARCHAR(255)
-    );
-
-    CREATE TABLE categories(
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) UNIQUE NOT NULL
-    );
-
-    CREATE TABLE category_products(
-        id SERIAL PRIMARY KEY,
-        "productId" INTEGER REFERENCES products(id),
-        "categoryId" INTEGER REFERENCES categories(id)
     );
     `);
     
@@ -364,11 +365,11 @@ async function createInitialCategories() {
 
 async function createInitialCategoryProducts() {
     try {
-        console.log("Starting to create initial product_categories")
-        const [Rock, Almogordo, Alluring, Beta, Bread, Butter, Cabocon, Candied, Chatoyant, Cinnamon, Cornichon, Dill, Genuine, German, Gherkin, Geode, Half, Hungarian, Jade, Kimchi, Kool, Kosher, Lime, Greg, Overnight, Polish, Sweet, Ghost] = await getAllProducts()
-        const [Anxious, Boring, Creepy, Gentle, Inspiring, Tired, Pendantic, Rambuncious, Silly, Sour, Spicy, sweet] = await getAllCategories()
+        console.log("Starting to create initial category_products")
+        const [Rock, Almogordo, Alluring, Beta, Bread, Butter, Cabocon, Candied, Chatoyant, Cinnamon, Cornichon, Dill, Genuine, German, Gherkin, Geode, Half, Hungarian, Jade, Kimchi, Kool, Kosher, Lime, Greg, Overnight, Polish, Sweeet, Ghost] = await getAllProducts()
+        const [Anxious, Boring, Creepy, Gentle, Inspiring, Tired, Pendantic, Rambuncious, Silly, Sour, Spicy, Sweet] = await getAllCategories()
 
-        const productCategoriesToCreate = [
+        const categoryProductsToCreate = [
             { productId: Rock.id, categoryId: Silly.id },
             { productId: Almogordo.id, categoryId: Spicy.id },
             { productId: Alluring.id, categoryId: Silly.id },
@@ -378,7 +379,7 @@ async function createInitialCategoryProducts() {
             { productId: Cabocon.id, categoryId: Anxious.id},
             { productId: Candied.id, categoryId: Anxious.id},
             { productId: Chatoyant.id, categoryId: Rambuncious.id},
-            { productId: Cinnamon.id, categoryId: sweet.id},
+            { productId: Cinnamon.id, categoryId: Sweet.id},
             { productId: Cornichon.id, categoryId: Anxious.id},
             { productId: Dill.id, categoryId: Sour.id},
             { productId: Genuine.id, categoryId: Sour.id},
@@ -395,16 +396,16 @@ async function createInitialCategoryProducts() {
             { productId: Greg.id, categoryId: Creepy.id},
             { productId: Overnight.id, categoryId: Tired.id},
             { productId: Polish.id, categoryId: Boring.id},
-            { productId: Sweet.id, categoryId: sweet.id},
+            { productId: Sweeet.id, categoryId: Sweet.id},
             { productId: Ghost.id, categoryId: Creepy.id},
         ]
 
-        const productCategories = await Promise.all(productCategoriesToCreate.map(addProductToCategory))
-        console.log("Added products to categories: ", productCategories)
+        const categoryProducts = await Promise.all(categoryProductsToCreate.map(addProductToCategory))
+        console.log("Added products to categories: ", categoryProducts)
 
-        console.log("Finished creating product_categories!")
+        console.log("Finished creating category_products!")
     } catch (error) {
-        console.log("Error while creating initial product_categories")
+        console.log("Error while creating initial category_products")
         throw error
     }
 }
@@ -416,12 +417,12 @@ async function rebuildDB() {
         await createTables();
         await createInitialUsers();
         await createInitialProducts();
+        await createInitialCategories();
+        await createInitialCategoryProducts();
         await createInitialCarts();
         await createInitialCartProducts();
         await createInitialOrders();
         await createInitialOrderProducts();
-        await createInitialCategories();
-        await createInitialCategoryProducts();
         console.log("RebuildDB function was successfull!")
     } catch (error) {
         console.log('Error during rebuildDB');

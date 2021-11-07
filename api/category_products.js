@@ -42,7 +42,6 @@ categoryProductsRouter.get('/category/:categoryId', async (req, res, next) => {
 	try	{
 		const {categoryId} = req.params;
 		const categoryProducts = await getCategoryProductsByCategory(categoryId);
-		console.log(categoryProducts);
 		res.send(categoryProducts);
 	} catch(error) {
 		next(error);

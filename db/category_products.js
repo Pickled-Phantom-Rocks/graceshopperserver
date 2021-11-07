@@ -70,10 +70,9 @@ async function getCategoryProductsByProduct(productId) {
 		const { rows: categoryProducts} = await client.query(`
 			SELECT *
 			FROM category_products
-			JOIN products ON category_products."productId" = products.id
 			WHERE "productId"=$1;
 		`, [productId]);
-		return categoryProducts
+		return categoryProducts;
 	} catch(error) {
 		throw error;
 	}

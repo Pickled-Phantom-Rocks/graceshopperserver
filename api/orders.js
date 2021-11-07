@@ -29,8 +29,8 @@ ordersRouter.get('/', async ( req, res, next) => {
         const allOrders = await getAllOrders();
         console.log(allOrders)
         res.send(allOrders);
-    } catch (error) {
-        next(error);
+    } catch (e) {
+        next(e);
     }
 })
 
@@ -100,9 +100,9 @@ ordersRouter.post('/:orderId/products', async (req, res, next) => {
 })
 
 ordersRouter.post('/:userId', async (req, res, next) => {
-    const { orderDate, totalPrice, orderStatus } = req.body;
+    const { orderDate, deliveryDate, totalPrice, orderStatus } = req.body;
     const { userId } = req.params;
-    const order = { userId, orderDate, totalPrice, orderStatus}; 
+    const order = { userId, orderDate, deliveryDate, totalPrice, orderStatus}; 
     try {
        const newOrder = await createOrder(order); 
        res.send(newOrder);

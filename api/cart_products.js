@@ -15,15 +15,10 @@ cartProductsRouter.use((req, res, next) => {
 })
 
 cartProductsRouter.get("/:cartId", async (req, res, next) => {
-
     const {cartId} = req.params
-
     try {
-
         const cartProduct = await getCart_ProductByCartId(cartId)
-
         res.send(cartProduct)
-
     } catch (error) {
         throw error
     }
@@ -31,16 +26,11 @@ cartProductsRouter.get("/:cartId", async (req, res, next) => {
 })
 
 cartProductsRouter.post('/:cartId', async (req, res, next) => {
-    //adds product to cart matching cartId
-
     const { cartId } = req.params
     const { productId, productPrice, quantityOfItem } = req.body
-    
-    const productsToAdd = { cartId, productId, productPrice, quantityOfItem }    
-
+        const productsToAdd = { cartId, productId, productPrice, quantityOfItem }    
     try {
         const addedProducts = await addProductToCart(productsToAdd)
-
         res.send(addedProducts)
     } catch (error) {
         throw error
@@ -49,12 +39,10 @@ cartProductsRouter.post('/:cartId', async (req, res, next) => {
 })
 
 cartProductsRouter.patch('/:cart_productId', async (req, res, next) => {
-
     const {cart_productId} = req.params;
     const { cartId, productId, productPrice, quantityOfItem } = req.body;
     const cart_ProductToUpdate = {};
     cart_ProductToUpdate.id = cart_productId;
-
     if (cartId) {
         cart_ProductToUpdate.cartId = cartId;
     }
@@ -67,13 +55,9 @@ cartProductsRouter.patch('/:cart_productId', async (req, res, next) => {
     if (quantityOfItem) {
         cart_ProductToUpdate.quantityOfItem = quantityOfItem;
     }
-
     try {
        const updatedCart_Product = await updateCart_Product(cart_ProductToUpdate); 
        res.send(updatedCart_Product);
-
-        console.log("CartId passed into carProductsPost: ", cartId)
-        console.log("Req Body from cartProductsPost: ", req.body)
     } catch (error) {
         throw error
     }
@@ -91,8 +75,6 @@ cartProductsRouter.delete('/:productId', async (req, res, next) => {
         throw error
     }
 })
-
-
 
 module.exports = {
     cartProductsRouter

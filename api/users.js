@@ -126,15 +126,18 @@ usersRouter.get('/profile', async (req, res, next) => {
 });
 
 usersRouter.get('/:userId', async (req, res, next) => {
+	//gets all data for user
 	try {
 		const {userId} = req.params
+
 		const userData = await getUserById(userId)
+
 		res.send(userData)
+
 	} catch (error) {
 		next(error)
 	}
 })
-
 
 usersRouter.patch('/:userId/info', async (req, res, next) => {
 	try {
@@ -153,7 +156,7 @@ usersRouter.patch('/:userId/info', async (req, res, next) => {
 		if(state){
 			fields.state = state;
 		}
-		const updated = updateUserInfo(userId, fields);
+		const updated = await updateUserInfo(userId, fields);
 		res.send({
 			status: 204,
 			message: "You have successfully edited your info."
@@ -168,7 +171,7 @@ usersRouter.patch('/:userId/billing', async (req, res, next) => {
 		const {userId} = req.params;
 		const {card, cvv} = req.body;
 		const fields = {billingInfo: card + ', ' + cvv};
-		const updated = updateUserInfo(userId, fields);
+		const updated = await updateUserInfo(userId, fields);
 		res.send({
 			status: 204,
 			message: "You have successfully edited your billing info."
@@ -191,7 +194,7 @@ usersRouter.patch('/:userId/password', async (req, res, next) => {
 		console.log('isCorrectPassword: ', isCorrectPassword);
 
 		if(isCorrectPassword) {
-			const updated = updatePassword(userId, newPassword)
+			const updated = await updatePassword(userId, newPassword)
 			res.send({
 				status: 204,
 				message: "You have successfully updated your password."

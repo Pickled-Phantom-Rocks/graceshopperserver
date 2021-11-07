@@ -49,14 +49,6 @@ async function getCart_ProductByCartId(cartId) {
 }
 
 async function updateCart_Product ({ id, ...fields}) {
-        // const setString = Object.keys(fields).map(
-        //   (key, index) => `"${ key }"=$${ index + 1 }`
-        // ).join(', ');
-      
-        // if (setString.length === 0) {
-        //   return;
-        // }
-      
         try {
 
           const toUpdate = {}
@@ -78,16 +70,6 @@ async function updateCart_Product ({ id, ...fields}) {
 
             return cart
           }
-
-          // const { rows: [ cart_product ]} = await client.query(`
-          //   UPDATE cart_products
-          //   SET ${ setString }
-          //   WHERE id=${id}
-          //   RETURNING *;
-          // `, Object.values(fields));
-          // console.log("UPDATE in db, updated cart product:", cart_product);
-
-          // return cart_product;
       
         } catch (error) {
           throw error;
@@ -101,7 +83,6 @@ async function deleteCart_Product (id) {
 			WHERE "productId"=$1
 			RETURNING *;
 		`, [id]);
-        console.log("DELETE in db, deleted cart_product", cart_product);
 		return cart_product;
 	} catch(error) {
 		throw error;

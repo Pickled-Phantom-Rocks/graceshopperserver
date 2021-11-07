@@ -52,9 +52,16 @@ orderProductsRouter.get('/:orderId', async (req, res, next) => {
     }
 })
 
-orderProductsRouter.post('/:orderId', async (req, res, next) => {
-    const result = await createOrder_Product(req.body);
-    res.send(result);
+orderProductsRouter.post('/', async (req, res, next) => {
+    const {orderId, productId, quantityOrdered, priceWhenOrdered, name, description, photoName } = req.body;
+    const sent = {orderId, productId, quantityOrdered, priceWhenOrdered, name, description, photoName};
+    const result = await createOrder_Product(sent);
+    if(result) {
+        res.send({
+            status: 204,
+            message: "Order product successfully created."
+        });
+    }
 })
 
 orderProductsRouter.patch('/:order_productId', async (req, res, next) => {
