@@ -39,6 +39,13 @@ orderProductsRouter.get('/:orderId', async (req, res, next) => {
     }
 })
 
+orderProductsRouter.post('/:orderId/products', async (req, res, next) => {
+    const {orderId} = req.params;
+    const {orderId, productId, quantityOrdered, priceWhenOrdered, name, description, photoName} = req.body;
+    const result = await createOrder_Product(req.body);
+    res.send(result);
+})
+
 orderProductsRouter.patch('/:order_productId', async (req, res, next) => {
     const {order_productId} = req.params;
     const {orderId, productId, quantityOrdered, priceWhenOrdered, name, description, price, photoName } = req.body;
