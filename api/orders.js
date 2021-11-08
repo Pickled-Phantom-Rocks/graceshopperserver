@@ -145,6 +145,21 @@ ordersRouter.delete('/:orderId'), async ( req, res, next) => {
     }
 }
 
+ordersRouter.delete('/:userId/orders', async (req, res, next) => {
+    const {userId} = req.params;
+    try {
+        const orders = await getAllOrdersByUserId(userId);
+        if(orders.length > 0){
+            orders.map(async (order) => {
+                const ordersToDelete = await deleteOrder(order.id);
+                res.send(ordersToDelete);
+            })
+        }
+    } catch(error) {
+        throw error
+    }
+})
+
 ordersRouter.patch('/:orderId/status', async (req, res, next) => {
     const { orderId } = req.params;
     const {orderStatus} = req.body;
