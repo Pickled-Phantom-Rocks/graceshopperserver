@@ -64,10 +64,8 @@ cartProductsRouter.patch('/:cart_productId', async (req, res, next) => {
 })
 
 cartProductsRouter.delete('/:productId', async (req, res, next) => {
-
     const {productId} = req.params
-
-    try {//delete a cart_product
+    try {
         const removedProduct = await deleteCart_Product(productId);
         res.send(removedProduct);
 
