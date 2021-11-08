@@ -1,7 +1,7 @@
 const express = require('express')
 const cartProductsRouter = express.Router()
 
-const { deleteCart_Product, updateCart_Product, addProductToCart, getCart_ProductByCartId } = require('../db');
+const { deleteCart_Product, updateCart_Product, addProductToCart, getCart_ProductByCartId, getCartProductByProductId } = require('../db');
 
 
 cartProductsRouter.use((req, res, next) => {
@@ -23,6 +23,16 @@ cartProductsRouter.get("/:cartId", async (req, res, next) => {
         throw error
     }
 
+})
+
+cartProductsRouter.get("/:productId/products", async (req, res, next) => {
+    const {productId} = req.params;
+    try {
+        const cartProducts = await getCartProductByProductId(productId);
+        res.send(cartProducts)
+    } catch(error) {
+        throw error
+    }
 })
 
 cartProductsRouter.post('/:cartId', async (req, res, next) => {

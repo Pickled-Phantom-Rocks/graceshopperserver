@@ -40,12 +40,23 @@ async function getCart_ProductByCartId(cartId) {
         FROM cart_products
         WHERE "cartId"=$1;
       `, [cartId]);
-
-      console.log("product inside cart By cartId:", cart_product );
 		return cart_product;
 	} catch(error) {
 		throw error;
 	}
+}
+
+async function getCartProductByProductId(productId){
+  try {
+    const { rows: cart_products} = await client.query(`
+      SELECT *
+      FROM cart_products
+      WHERE "productId"=$1;
+    `, [productId]);
+    return cart_products
+  } catch(error) {
+    throw error;
+  }
 }
 
 async function updateCart_Product ({ id, ...fields}) {
@@ -105,8 +116,8 @@ module.exports = {
     addProductToCart,
     getCart_ProductById,
     getCart_ProductByCartId,
+    getCartProductByProductId,
     updateCart_Product,
     deleteCart_Product,
     canEditCart_Product
-
 };
