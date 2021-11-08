@@ -135,7 +135,7 @@ ordersRouter.patch('/:orderId', async (req, res, next) => {
     }
 });
 
-ordersRouter.delete('/:orderId'), async ( req, res, next) => {
+ordersRouter.delete('/:orderId', async ( req, res, next) => {
     const { orderId } = req.params;
     try {
         const orderToDelete = await deleteOrder(orderId);
@@ -143,7 +143,7 @@ ordersRouter.delete('/:orderId'), async ( req, res, next) => {
     } catch (e) {
         throw e;
     }
-}
+})
 
 ordersRouter.delete('/:userId/orders', async (req, res, next) => {
     const {userId} = req.params;

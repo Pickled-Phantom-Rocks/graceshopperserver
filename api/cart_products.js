@@ -68,7 +68,6 @@ cartProductsRouter.delete('/:productId', async (req, res, next) => {
     try {
         const removedProduct = await deleteCart_Product(productId);
         res.send(removedProduct);
-
     } catch (error) {
         throw error
     }
