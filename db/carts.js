@@ -120,6 +120,13 @@ async function updateCart({ userId, ...fields}) {
 
 async function destroyCart(userId) {
     try {
+        const cart = getCartByUserId(userId);
+        const cartID = cart.id;
+        
+        await client.query(`
+            DELETE from cart_products
+            WHERE "cartId"=$1;
+        `, [cartID]);
 
         const { rows: [cart] } = await client.query(`
             DELETE FROM carts

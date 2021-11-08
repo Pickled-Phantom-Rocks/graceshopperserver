@@ -126,14 +126,10 @@ usersRouter.get('/profile', async (req, res, next) => {
 });
 
 usersRouter.get('/:userId', async (req, res, next) => {
-	//gets all data for user
 	try {
 		const {userId} = req.params
-
 		const userData = await getUserById(userId)
-
 		res.send(userData)
-
 	} catch (error) {
 		next(error)
 	}
